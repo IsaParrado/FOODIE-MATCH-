@@ -225,4 +225,652 @@ h1,h2,h3,.display{ font-family: 'Fraunces', serif; color: var(--ink); margin: 0;
 
 <script>
 /* ============ DATA ============ */
-const CUISINES = ["Italiana","Francesa","Española","Colombiana","Mexicana","Japonesa","China","Coreana","India","Tailand
+const CUISINES = ["Italiana","Francesa","Española","Colombiana","Mexicana","Japonesa","China","Coreana","India","Tailandesa","Argentina","Brasileña","Peruana","Árabe","Griega","Americana","Comida rápida","Comida saludable","Repostería y postres","Cafeterías"];
+const INGREDIENTS = ["Lechuga","Zanahoria","Aguacate","Tomate","Maíz","Papa","Queso","Huevo","Pollo","Carne","Pescado","Mariscos","Champiñones","Pasta","Arroz","Chocolate","Frutas","Picante"];
+const FLAVORS = ["Dulce","Salado","Ácido","Picante","Amargo","Agridulce"];
+const DISHTYPES = [["entrada","Entrada"],["platoFuerte","Plato fuerte"],["postre","Postre"],["compartir","Para compartir"]];
+const AMBIENTES = [["casual","Casual"],["familiar","Familiar"],["elegante","Elegante"],["tranquilo","Tranquilo"],["moderno","Moderno"],["romantico","Para celebrar"]];
+const BUDGETS = [["$","Económico"],["$$","Moderado"],["$$$","Alto"],["$$$$","Premium"]];
+const FOOD_IMG = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=300&q=60";
+
+function menuItem(name, desc, price, ing, img){ return {name, desc, price, ingredients:ing, img: img||FOOD_IMG}; }
+
+const RESTAURANTS = [
+  { id:1, name:"La Trattoria", cuisine:["Italiana"], ingredients:["Pasta","Queso","Tomate"], flavors:["salado","agridulce"], price:2, dishTypes:["entrada","platoFuerte","postre","compartir"], ambiente:["moderno","romantico"], distance:1.2, rating:4.7, groupFriendly:true, capacityLarge:true, dish:"Lasaña boloñesa", dessert:"Tiramisú", avgPerson:42000,
+    img:"https://images.unsplash.com/photo-1481931098730-318b6f776db0?auto=format&fit=crop&w=800&q=60", hours:"12:00 pm – 10:30 pm", address:"Cra 13 #85-32, Chapinero, Bogotá",
+    menu:{
+      entradas:[menuItem("Bruschetta clásica","Pan tostado, tomate, albahaca y ajo.",14000,["Tomate","Pan","Albahaca"])],
+      platosFuertes:[menuItem("Lasaña boloñesa","Capas de pasta, carne y salsa bechamel.",32000,["Pasta","Carne","Queso"]), menuItem("Pizza Margarita","Salsa de tomate, mozzarella y albahaca.",28000,["Queso","Tomate"])],
+      postres:[menuItem("Tiramisú","Clásico postre italiano con café y mascarpone.",14000,["Chocolate"])],
+      bebidas:[menuItem("Limonada de coco",null,9000,[])]
+    },
+    reviews:[
+      {user:"Ana M.", rating:5, text:"La pasta estaba perfecta y el ambiente muy acogedor.", cat:{comida:5,servicio:4,ambiente:5,precio:4,variedad:4}},
+      {user:"Carlos R.", rating:4, text:"Buen servicio, un poco demorado en hora pico.", cat:{comida:4,servicio:3,ambiente:4,precio:4,variedad:4}},
+    ],
+    friends:[{name:"Ana", action:"le dio 5 estrellas"},{name:"Carlos", action:"guardó este restaurante"}]
+  },
+  { id:2, name:"Taquería El Sol", cuisine:["Mexicana","Comida rápida"], ingredients:["Carne","Aguacate","Queso"], flavors:["picante","salado"], price:1, dishTypes:["entrada","platoFuerte","compartir"], ambiente:["casual"], distance:0.8, rating:4.5, groupFriendly:true, capacityLarge:true, dish:"Tacos al pastor", dessert:"Flan de vainilla", avgPerson:24000,
+    img:"https://images.unsplash.com/photo-1565299585323-38174c4a6471?auto=format&fit=crop&w=800&q=60", hours:"11:00 am – 9:00 pm", address:"Calle 63 #11-20, Bogotá",
+    menu:{
+      entradas:[menuItem("Guacamole con totopos","Aguacate fresco molido con limón y cilantro.",13000,["Aguacate"])],
+      platosFuertes:[menuItem("Tacos al pastor (3 uds)","Carne de cerdo marinada, piña y cilantro.",22000,["Carne"]), menuItem("Quesadilla de pollo",null,18000,["Pollo","Queso"])],
+      postres:[menuItem("Flan de vainilla",null,10000,[])],
+      bebidas:[menuItem("Horchata",null,7000,[])]
+    },
+    reviews:[{user:"María P.", rating:5, text:"Los tacos saben como en México, muy recomendado.", cat:{comida:5,servicio:5,ambiente:4,precio:5,variedad:4}}],
+    friends:[{name:"María", action:"recomendó este restaurante"}]
+  },
+  { id:3, name:"Sakura Sushi", cuisine:["Japonesa"], ingredients:["Mariscos","Arroz","Aguacate"], flavors:["salado","acido"], price:3, dishTypes:["entrada","platoFuerte","postre"], ambiente:["elegante","moderno"], distance:2.1, rating:4.8, groupFriendly:false, capacityLarge:false, dish:"Roll acevichado", dessert:"Mochi de té verde", avgPerson:65000,
+    img:"https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=800&q=60", hours:"12:30 pm – 11:00 pm", address:"Zona T, Cra 12A, Bogotá",
+    menu:{
+      entradas:[menuItem("Edamame",null,12000,[])],
+      platosFuertes:[menuItem("Roll acevichado","Camarón, aguacate y salsa acevichada.",34000,["Mariscos","Aguacate"]), menuItem("Nigiri mixto (8 uds)",null,42000,["Pescado","Arroz"])],
+      postres:[menuItem("Mochi de té verde",null,13000,[])],
+      bebidas:[menuItem("Té verde helado",null,8000,[])]
+    },
+    reviews:[{user:"Julián T.", rating:5, text:"El pescado es fresquísimo, ambiente elegante ideal para una cita.", cat:{comida:5,servicio:5,ambiente:5,precio:3,variedad:4}}],
+    friends:[{name:"Julián", action:"le dio 5 estrellas"}]
+  },
+  { id:4, name:"Seoul BBQ", cuisine:["Coreana"], ingredients:["Carne","Pollo"], flavors:["picante","dulce"], price:2, dishTypes:["platoFuerte","postre","compartir"], ambiente:["familiar","casual"], distance:3.0, rating:4.6, groupFriendly:true, capacityLarge:true, dish:"Bulgogi a la parrilla", dessert:"Helado de té verde", avgPerson:48000,
+    img:"https://images.unsplash.com/photo-1498654896293-37aacf113fd9?auto=format&fit=crop&w=800&q=60", hours:"1:00 pm – 10:00 pm", address:"Cra 15 #100-45, Bogotá",
+    menu:{
+      entradas:[menuItem("Kimchi de la casa",null,9000,["Picante"])],
+      platosFuertes:[menuItem("Bulgogi a la parrilla","Carne marinada asada en la mesa.",38000,["Carne"]), menuItem("Pollo picante coreano",null,32000,["Pollo","Picante"])],
+      postres:[menuItem("Helado de té verde",null,11000,[])],
+      bebidas:[menuItem("Soju",null,25000,[])]
+    },
+    reviews:[{user:"Laura G.", rating:4, text:"Perfecto para ir en grupo, la parrilla en la mesa es muy divertida.", cat:{comida:4,servicio:4,ambiente:5,precio:4,variedad:5}}],
+    friends:[{name:"Laura", action:"guardó este restaurante"}]
+  },
+  { id:5, name:"Burger House", cuisine:["Americana","Comida rápida"], ingredients:["Carne","Queso","Papa"], flavors:["salado"], price:1, dishTypes:["platoFuerte","compartir"], ambiente:["casual","moderno"], distance:1.5, rating:4.3, groupFriendly:true, capacityLarge:true, dish:"Burger clásica doble", dessert:"Brownie con helado", avgPerson:26000,
+    img:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=60", hours:"11:00 am – 11:00 pm", address:"Calle 82 #14-05, Bogotá",
+    menu:{
+      entradas:[menuItem("Papas con queso",null,12000,["Papa","Queso"])],
+      platosFuertes:[menuItem("Burger clásica doble","Doble carne, queso cheddar y salsa especial.",24000,["Carne","Queso"])],
+      postres:[menuItem("Brownie con helado",null,11000,["Chocolate"])],
+      bebidas:[menuItem("Malteada de vainilla",null,10000,[])]
+    },
+    reviews:[{user:"Pedro L.", rating:4, text:"Buena relación calidad-precio, ideal para ir rápido.", cat:{comida:4,servicio:4,ambiente:3,precio:5,variedad:3}}],
+    friends:[{name:"Pedro", action:"recomendó este restaurante"}]
+  },
+  { id:6, name:"Verde Vegetariano", cuisine:["Comida saludable"], ingredients:["Aguacate","Queso","Frutas"], flavors:["dulce","agridulce"], price:2, dishTypes:["entrada","platoFuerte","postre"], ambiente:["tranquilo","moderno"], distance:1.9, rating:4.4, groupFriendly:true, capacityLarge:false, dish:"Bowl de quinoa y aguacate", dessert:"Pastel de zanahoria", avgPerson:34000,
+    img:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=60", hours:"9:00 am – 8:00 pm", address:"Cra 9 #67-14, Bogotá",
+    menu:{
+      entradas:[menuItem("Ensalada de la huerta","Lechuga, zanahoria, maíz y vinagreta.",15000,["Lechuga","Zanahoria","Maíz"])],
+      platosFuertes:[menuItem("Bowl de quinoa y aguacate",null,26000,["Aguacate"])],
+      postres:[menuItem("Pastel de zanahoria",null,12000,["Zanahoria"])],
+      bebidas:[menuItem("Jugo verde",null,9000,[])]
+    },
+    reviews:[{user:"Sofía N.", rating:4, text:"Muy fresco y ligero, buen lugar para comer saludable.", cat:{comida:4,servicio:4,ambiente:4,precio:4,variedad:3}}],
+    friends:[{name:"Sofía", action:"le dio 4 estrellas"}]
+  },
+  { id:7, name:"Shanghai Garden", cuisine:["China"], ingredients:["Pollo","Arroz","Mariscos"], flavors:["agridulce","salado"], price:2, dishTypes:["entrada","platoFuerte","postre","compartir"], ambiente:["familiar"], distance:2.6, rating:4.2, groupFriendly:true, capacityLarge:true, dish:"Pollo agridulce", dessert:"Helado frito", avgPerson:31000,
+    img:"https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=800&q=60", hours:"12:00 pm – 9:30 pm", address:"Calle 45 #22-10, Bogotá",
+    menu:{
+      entradas:[menuItem("Rollitos primavera",null,11000,[])],
+      platosFuertes:[menuItem("Pollo agridulce",null,27000,["Pollo"]), menuItem("Arroz frito con mariscos",null,29000,["Arroz","Mariscos"])],
+      postres:[menuItem("Helado frito",null,10000,[])],
+      bebidas:[menuItem("Té de jazmín",null,6000,[])]
+    },
+    reviews:[{user:"Diego F.", rating:4, text:"Buena variedad y porciones grandes, ideal para compartir.", cat:{comida:4,servicio:3,ambiente:3,precio:4,variedad:5}}],
+    friends:[{name:"Diego", action:"guardó este restaurante"}]
+  },
+  { id:8, name:"Casa Árabe", cuisine:["Árabe","Griega"], ingredients:["Carne","Papa","Frutas"], flavors:["agridulce","picante"], price:2, dishTypes:["entrada","platoFuerte","postre","compartir"], ambiente:["elegante","romantico"], distance:2.3, rating:4.5, groupFriendly:true, capacityLarge:true, dish:"Shawarma mixto", dessert:"Baklava", avgPerson:36000,
+    img:"https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=60", hours:"12:00 pm – 10:00 pm", address:"Cra 7 #45-90, Bogotá",
+    menu:{
+      entradas:[menuItem("Hummus con pan pita",null,13000,[])],
+      platosFuertes:[menuItem("Shawarma mixto","Carne y pollo con salsas árabes.",29000,["Carne","Pollo"])],
+      postres:[menuItem("Baklava",null,9000,["Frutas"])],
+      bebidas:[menuItem("Té de menta",null,6000,[])]
+    },
+    reviews:[{user:"Valentina S.", rating:5, text:"Sabores increíbles, perfecto para una cena especial.", cat:{comida:5,servicio:4,ambiente:5,precio:4,variedad:4}}],
+    friends:[{name:"Valentina", action:"le dio 5 estrellas"}]
+  },
+];
+
+/* ============ STATE ============ */
+const norm = s => (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+let state = {
+  view: "home",
+  location: "Bogotá, Chapinero",
+  mode: "individual",
+  prefs: { cuisines:[], liked:[], avoid:[], flavors:[], dishTypes:[], ambiente:[], budget:null },
+  groupSize: 4,
+  groupMembers: [0,1,2,3].map(i=>({name:"Persona "+(i+1), cuisine:null})),
+  groupSettings: { budget:2, ambiente:[], bigTable:true },
+  favorites: new Set(),
+  history: [],
+  selectedId: null,
+  detailTab: "match",
+  reservation: { date:null, time:null, people:2, name:"", step:"date", confirmed:false },
+  reservations: [],
+};
+
+/* ============ RESERVATION HELPERS ============ */
+const DAY_NAMES = ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
+const DAY_NAMES_FULL = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+const MONTH_NAMES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+function nextDays(n){
+  const out=[]; const today=new Date();
+  for(let i=0;i<n;i++){ const d=new Date(today); d.setDate(today.getDate()+i); out.push(d); }
+  return out;
+}
+function timeSlotsFor(r, date){
+  const all = ["12:00 p. m.","1:00 p. m.","2:00 p. m.","6:00 p. m.","7:00 p. m.","8:00 p. m.","9:00 p. m."];
+  // simula disponibilidad: algunos horarios ya ocupados según el día
+  const dayIdx = date.getDate();
+  return all.map(t => ({ time:t, available: (dayIdx + t.length) % 5 !== 0 }));
+}
+function resetReservation(){ state.reservation = { date:null, time:null, people:2, name:"", step:"date", confirmed:false }; }
+function confirmReservation(){
+  const r = RESTAURANTS.find(x=>x.id===state.selectedId);
+  const res = { ...state.reservation, restaurant:r.name, id: Date.now() };
+  state.reservations.unshift(res);
+  state.reservation.confirmed = true;
+  addHistory("Reserva en "+r.name+" — "+res.date+" "+res.time);
+  render();
+}
+
+function go(view){ state.view = view; render(); window.scrollTo(0,0); }
+function toggleArr(arrRef, val){ const i = arrRef.indexOf(val); if(i>-1) arrRef.splice(i,1); else arrRef.push(val); }
+function addHistory(label){ state.history.unshift(label); state.history = state.history.slice(0,6); }
+function priceLabel(n){ return "$".repeat(n); }
+function fmtCOP(n){ return "$"+n.toLocaleString("es-CO"); }
+function avgRating(r){ const s=r.reviews.reduce((a,x)=>a+x.rating,0); return (s/r.reviews.length).toFixed(1); }
+function avgCat(r,key){ const s=r.reviews.reduce((a,x)=>a+x.cat[key],0); return s/r.reviews.length; }
+
+/* ============ MATCHING (mejorado: incluye calificación) ============ */
+function scoreIndividual(r, p){
+  let score = 0; const reasons = [];
+  if(p.cuisines.length===0){ score += 22; }
+  else{
+    const matched = p.cuisines.filter(c=> r.cuisine.map(norm).includes(norm(c)));
+    score += 22*(matched.length? 1 : 0);
+    if(matched.length) reasons.push("Tiene comida "+matched.join(", ").toLowerCase()+".");
+  }
+  const hasAvoid = p.avoid.some(a => r.ingredients.map(norm).includes(norm(a)));
+  if(hasAvoid){ /* penaliza este bloque */ }
+  else if(p.liked.length===0){ score += 18; }
+  else {
+    const matched = p.liked.filter(l => r.ingredients.map(norm).includes(norm(l)));
+    score += 18 * (matched.length/p.liked.length);
+    matched.forEach(m=> reasons.push("Tiene "+m.toLowerCase()+"."));
+  }
+  if(p.flavors.length===0){ score += 13; }
+  else {
+    const matched = p.flavors.filter(f=> r.flavors.map(norm).includes(norm(f)));
+    score += 13*(matched.length/p.flavors.length);
+    if(matched.length) reasons.push("Tiene sabores "+matched.join(", ").toLowerCase()+".");
+  }
+  const priceMap = {"$":1,"$$":2,"$$$":3,"$$$$":4};
+  if(!p.budget){ score += 13; }
+  else {
+    const diff = Math.abs(priceMap[p.budget]-r.price);
+    if(diff===0){ score+=13; reasons.push("Está dentro de tu presupuesto."); }
+    else if(diff===1){ score+=6; }
+  }
+  if(p.dishTypes.length===0){ score += 9; }
+  else{
+    const matched = p.dishTypes.filter(d=> r.dishTypes.includes(d));
+    score += 9*(matched.length/p.dishTypes.length);
+    if(matched.includes("postre")) reasons.push("Tiene postres.");
+    if(matched.includes("compartir")) reasons.push("Tiene opciones para compartir.");
+  }
+  if(r.distance<=1) score+=5; else if(r.distance<=2) score+=4; else if(r.distance<=3) score+=3; else score+=1.5;
+  if(r.distance<=1.5) reasons.push("Está a "+r.distance+" km de tu ubicación.");
+  if(p.ambiente.length===0){ score+=8; }
+  else{
+    const matched = p.ambiente.filter(a=> r.ambiente.includes(a));
+    score += 8*(matched.length/p.ambiente.length);
+  }
+  // calificación de otros usuarios (nuevo)
+  const ratingBonus = ((r.rating-3.5)/1.5)*12; // hasta 12 pts
+  score += Math.max(0, ratingBonus);
+  reasons.push("Tiene una calificación de "+r.rating+" estrellas.");
+  return { pct: Math.round(Math.max(0,Math.min(100,score))), reasons: reasons.slice(0,7) };
+}
+
+function scoreGroup(r, members, settings){
+  let score = 0; const reasons = [];
+  const chosen = members.filter(m=>m.cuisine);
+  const matchCount = chosen.filter(m=> r.cuisine.map(norm).includes(norm(m.cuisine))).length;
+  const total = chosen.length || 1;
+  score += 26 * (chosen.length? matchCount/total : 1);
+  if(chosen.length) reasons.push(matchCount+" de "+chosen.length+" personas coinciden con el tipo de comida.");
+  score += r.groupFriendly? 18:5;
+  if(r.groupFriendly) reasons.push("Tiene mesas para grupos.");
+  if(r.price<=settings.budget){ score+=18; reasons.push("Está dentro del presupuesto."); } else if(r.price===settings.budget+1){ score+=7; }
+  if(settings.ambiente.length===0){ score+=9; } else{
+    const m = settings.ambiente.filter(a=>r.ambiente.includes(a));
+    score += 9*(m.length/settings.ambiente.length);
+  }
+  if(r.dishTypes.length>=3){ score+=9; reasons.push("Tiene variedad de platos."); }
+  if(r.dishTypes.includes("compartir")){ score+=5; reasons.push("Tiene opciones para compartir."); }
+  if(r.dishTypes.includes("postre")){ score+=5; reasons.push("Tiene postres."); }
+  if(settings.bigTable && r.capacityLarge){ reasons.push("Tiene espacio para grupos grandes."); }
+  const ratingBonus = ((r.rating-3.5)/1.5)*10;
+  score += Math.max(0, ratingBonus);
+  reasons.push("Tiene una calificación de "+r.rating+" estrellas.");
+  return { pct: Math.round(Math.max(0,Math.min(100,score))), reasons: reasons.slice(0,7) };
+}
+function computeResults(){
+  return state.mode==="individual"
+    ? RESTAURANTS.map(r=>({ r, ...scoreIndividual(r, state.prefs) })).sort((a,b)=>b.pct-a.pct)
+    : RESTAURANTS.map(r=>({ r, ...scoreGroup(r, state.groupMembers, state.groupSettings) })).sort((a,b)=>b.pct-a.pct);
+}
+
+/* ============ HOME ============ */
+function renderHome(){
+  return `
+    <div class="topbar">
+      <div class="brand"><div class="mark">❤️</div><div class="name">Foodie Match<span class="v2-badge">V3</span></div></div>
+      <div class="loc-pill" onclick="changeLocation()">📍 ${state.location} <span style="opacity:.6">▾</span></div>
+    </div>
+    <div class="slogan">Encuentra tu match gastronómico.</div>
+    <div class="hero-question">¿Qué quieres<br>comer hoy?</div>
+    <div class="search-bar"><span>🔎</span><input placeholder="Busca un tipo de comida, plato o restaurante..." onkeydown="if(event.key==='Enter'){go('prefs')}"></div>
+    <div class="quick-grid">
+      <div class="quick-chip" onclick="go('prefs')"><span class="ic">🍝</span><span class="lb">Tipo de comida</span></div>
+      <div class="quick-chip" onclick="go('prefs')"><span class="ic">😋</span><span class="lb">Mis gustos</span></div>
+      <div class="quick-chip" onclick="go('group')"><span class="ic">👥</span><span class="lb">Para un grupo</span></div>
+      <div class="quick-chip" onclick="go('prefs')"><span class="ic">💰</span><span class="lb">Presupuesto</span></div>
+      <div class="quick-chip" onclick="go('prefs')"><span class="ic">🍰</span><span class="lb">Postres</span></div>
+      <div class="quick-chip" onclick="go('prefs')"><span class="ic">🍽️</span><span class="lb">Platos fuertes</span></div>
+    </div>
+    <button class="cta-main" onclick="state.mode='individual'; go('prefs')">Encontrar mi Match ❤️</button>
+    <button class="cta-secondary" onclick="state.mode='group'; go('group')">👥 Buscar para un grupo</button>
+    <div class="section-label">Populares cerca de ti</div>
+    <div class="popular-row">
+      ${RESTAURANTS.slice(0,5).map(r=>`
+        <div class="popular-card" onclick="state.selectedId=${r.id}; state.detailTab='match'; go('detail')">
+          <img src="${r.img}" alt="${r.name}">
+          <div class="pc-body"><div class="pc-name">${r.name}</div><div class="pc-match">⭐ ${r.rating} · ${priceLabel(r.price)}</div></div>
+        </div>`).join("")}
+    </div>
+  `;
+}
+function changeLocation(){ const v = prompt("Escribe tu ciudad, barrio o dirección:", state.location); if(v){ state.location = v; render(); } }
+
+/* ============ PREFERENCES ============ */
+function renderPrefs(){
+  const p = state.prefs;
+  const cuisineChip = c => `<div class="chip ${p.cuisines.includes(c)?'selected':''}" onclick="toggleArr(state.prefs.cuisines,'${c}'); render()">${c}</div>`;
+  const likedChip = i => `<div class="chip ${p.liked.includes(i)?'selected':''}" onclick="toggleArr(state.prefs.liked,'${i}'); render()">${i}</div>`;
+  const avoidChip = i => `<div class="chip avoid ${p.avoid.includes(i)?'selected':''}" onclick="toggleArr(state.prefs.avoid,'${i}'); render()">${i}</div>`;
+  const flavorChip = f => `<div class="chip ${p.flavors.includes(f)?'selected':''}" onclick="toggleArr(state.prefs.flavors,'${f}'); render()">${f}</div>`;
+  return `
+    <div class="top-nav-back" onclick="go('home')">← Volver</div>
+    <h2 style="font-size:22px; margin-bottom:4px;">Cuéntanos qué te gusta</h2>
+    <div class="field-sub" style="margin-bottom:20px;">Entre más nos cuentes, más preciso será tu Match.</div>
+
+    <div class="field">
+      <div class="field-title">Tipo de comida</div>
+      <div class="field-sub">Puedes elegir varias cocinas a la vez — ahora con más opciones.</div>
+      <div class="chip-grid">${CUISINES.map(cuisineChip).join("")}</div>
+    </div>
+
+    <div class="field">
+      <div class="field-title">¿Qué te gustaría encontrar en tu comida?</div>
+      <div class="field-sub">Selecciona los ingredientes que no pueden faltar.</div>
+      <div class="chip-grid">${INGREDIENTS.map(likedChip).join("")}</div>
+    </div>
+
+    <div class="field">
+      <div class="field-title">¿Qué prefieres evitar?</div>
+      <div class="field-sub">Los filtramos de tus recomendaciones.</div>
+      <div class="chip-grid">${INGREDIENTS.map(avoidChip).join("")}</div>
+    </div>
+
+    <div class="field">
+      <div class="field-title">Sabores</div>
+      <div class="chip-grid">${FLAVORS.map(flavorChip).join("")}</div>
+    </div>
+
+    <div class="field">
+      <div class="field-title">Tipo de plato</div>
+      <div class="chip-grid">${DISHTYPES.map(([k,l])=>`<div class="chip ${p.dishTypes.includes(k)?'selected':''}" onclick="toggleArr(state.prefs.dishTypes,'${k}'); render()">${l}</div>`).join("")}</div>
+    </div>
+
+    <div class="field">
+      <div class="field-title">Ambiente</div>
+      <div class="chip-grid">${AMBIENTES.map(([k,l])=>`<div class="chip ${p.ambiente.includes(k)?'selected':''}" onclick="toggleArr(state.prefs.ambiente,'${k}'); render()">${l}</div>`).join("")}</div>
+    </div>
+
+    <div class="field">
+      <div class="field-title">Presupuesto</div>
+      <div class="budget-row">${BUDGETS.map(([k,l])=>`<div class="budget-opt ${p.budget===k?'selected':''}" onclick="state.prefs.budget='${k}'; render()">${k}<small>${l}</small></div>`).join("")}</div>
+    </div>
+
+    <button class="cta-main" onclick="submitIndividual()">Encontrar mi Match ❤️</button>
+  `;
+}
+function submitIndividual(){ addHistory((state.prefs.cuisines[0]||"Comida")+" — "+state.location); go('results'); }
+
+/* ============ GROUP ============ */
+function syncGroupMembers(){ const n = state.groupSize; while(state.groupMembers.length<n) state.groupMembers.push({name:"Persona "+(state.groupMembers.length+1), cuisine:null}); state.groupMembers = state.groupMembers.slice(0,n); }
+function renderGroup(){
+  syncGroupMembers();
+  const s = state.groupSettings;
+  return `
+    <div class="top-nav-back" onclick="go('home')">← Volver</div>
+    <h2 style="font-size:22px;">¿Con cuántas personas vas?</h2>
+    <div class="field-sub">Agrega las preferencias de tu grupo.</div>
+    <div class="stepper"><button onclick="state.groupSize=Math.max(2,state.groupSize-1); render()">–</button><div class="count">${state.groupSize}</div><button onclick="state.groupSize=Math.min(12,state.groupSize+1); render()">+</button></div>
+    ${state.groupMembers.map((m,idx)=>`
+      <div class="person-card">
+        <div class="p-head"><div class="p-name">👤 ${m.name}</div></div>
+        <select onchange="state.groupMembers[${idx}].cuisine=this.value; render()">
+          <option value="">Tipo de comida favorita...</option>
+          ${CUISINES.map(c=>`<option value="${c}" ${m.cuisine===c?'selected':''}>${c}</option>`).join("")}
+        </select>
+      </div>
+    `).join("")}
+    <div class="field" style="margin-top:20px;">
+      <div class="field-title">Presupuesto máximo por persona</div>
+      <div class="budget-row">${["$","$$","$$$","$$$$"].map((k,i)=>`<div class="budget-opt ${s.budget===i+1?'selected':''}" onclick="state.groupSettings.budget=${i+1}; render()">${k}</div>`).join("")}</div>
+    </div>
+    <div class="field"><div class="field-title">Ambiente</div><div class="chip-grid">${AMBIENTES.map(([k,l])=>`<div class="chip small ${s.ambiente.includes(k)?'selected':''}" onclick="toggleArr(state.groupSettings.ambiente,'${k}'); render()">${l}</div>`).join("")}</div></div>
+    <div class="field"><label class="list-item" style="cursor:pointer;"><span class="li-lbl">🪑 Necesitamos mesa grande</span><input type="checkbox" ${s.bigTable?'checked':''} onchange="state.groupSettings.bigTable=this.checked; render()"></label></div>
+    <button class="cta-main" onclick="submitGroup()">Encontrar nuestro Match ❤️</button>
+  `;
+}
+function submitGroup(){ state.mode="group"; addHistory("Restaurantes para "+state.groupSize+" personas"); go('results'); }
+
+/* ============ RESULTS ============ */
+function renderResults(){
+  const results = computeResults();
+  const heading = state.mode==="group" ? "Match para tu grupo" : "Tu Match de hoy";
+  return `
+    <div class="top-nav-back" onclick="go(state.mode==='group'?'group':'prefs')">← Ajustar preferencias</div>
+    <h2 style="font-size:22px; margin-bottom:14px;">${heading}</h2>
+    <div class="mode-toggle">
+      <button class="${state.mode==='individual'?'active':''}" onclick="state.mode='individual'; render()">😋 Individual</button>
+      <button class="${state.mode==='group'?'active':''}" onclick="state.mode='group'; render()">👥 Grupo</button>
+    </div>
+    ${results.map(({r,pct,reasons})=>`
+      <div class="rcard" onclick="state.selectedId=${r.id}; state.detailTab='match'; go('detail')">
+        <img src="${r.img}" alt="${r.name}">
+        <div class="rcard-body">
+          <div class="rcard-top"><div class="rcard-name">${r.name}</div><div class="match-badge">${pct}% ❤️</div></div>
+          <div class="rcard-meta"><span>⭐ ${r.rating}</span><span>💰 ${priceLabel(r.price)}</span><span>📍 ${r.distance} km</span><span>👤 ~${fmtCOP(r.avgPerson)}</span></div>
+          <div class="why-box"><b>¿Por qué es tu Match?</b><br>${reasons.length? reasons.map(x=>"✓ "+x).join("<br>") : "Coincidencia general con tus preferencias."}</div>
+          <div class="reco-row"><span>🍽️ ${r.dish}</span><span>·</span><span>🍰 ${r.dessert}</span></div>
+          <div class="card-actions" onclick="event.stopPropagation()">
+            <div class="btn-sm" onclick="state.selectedId=${r.id}; state.detailTab='match'; go('detail')">Ver restaurante</div>
+            <div class="btn-sm fav ${state.favorites.has(r.id)?'saved':''}" onclick="toggleFav(${r.id})">${state.favorites.has(r.id)?'❤️ Guardado':'🤍 Guardar'}</div>
+          </div>
+        </div>
+      </div>
+    `).join("")}
+  `;
+}
+function toggleFav(id){ if(state.favorites.has(id)) state.favorites.delete(id); else state.favorites.add(id); render(); }
+
+/* ============ DETAIL (con tabs: Match / Carta / Reseñas / Cómo llegar / Amigos) ============ */
+function renderDetail(){
+  const r = RESTAURANTS.find(x=>x.id===state.selectedId);
+  if(!r) return `<div class="empty-state">Restaurante no encontrado.</div>`;
+  const score = state.mode==="group" ? scoreGroup(r, state.groupMembers, state.groupSettings) : scoreIndividual(r, state.prefs);
+  const tabs = [["match","❤️ Match"],["carta","📖 Carta"],["reviews","⭐ Reseñas"],["reserve","📅 Reservar"],["directions","📍 Llegar"],["social","👥 Amigos"]];
+
+  const tabsHtml = `<div class="tabs">${tabs.map(([k,l])=>`<div class="tab ${state.detailTab===k?'active':''}" onclick="state.detailTab='${k}'; render()">${l}</div>`).join("")}</div>`;
+
+  let body = "";
+  if(state.detailTab==="match"){
+    body = `
+      <div class="match-circle-wrap">
+        <div class="match-circle" style="--pct:${score.pct}"><div class="inner"><b>${score.pct}%</b></div></div>
+        <div><div style="font-family:'Fraunces'; font-weight:600; font-size:15px;">¿Por qué es tu Match?</div><div style="font-size:12px; color:var(--gray);">${state.mode==='group'?'Basado en tu grupo, calificación y más':'Basado en tus gustos y calificación'}</div></div>
+      </div>
+      <div class="why-box" style="margin-bottom:18px;">${score.reasons.map(x=>"✓ "+x).join("<br>")||"Buena opción general."}</div>
+      <div class="info-grid">
+        <div class="info-item"><div class="lbl">Ambiente</div><div class="val">${r.ambiente.map(a=>AMBIENTES.find(x=>x[0]===a)[1]).join(", ")}</div></div>
+        <div class="info-item"><div class="lbl">Ubicación</div><div class="val">${r.address}</div></div>
+        <div class="info-item"><div class="lbl">Capacidad</div><div class="val">${r.capacityLarge? "Grupos grandes":"Mesas pequeñas"}</div></div>
+        <div class="info-item"><div class="lbl">Para grupos</div><div class="val">${r.groupFriendly? "Sí, recomendado":"Limitado"}</div></div>
+      </div>
+      <div class="section-label">Recomendado para ti</div>
+      <div class="dish-row">
+        <div class="dish-card"><div class="d-lbl">Plato fuerte</div><div class="d-name">🍽️ ${r.dish}</div></div>
+        <div class="dish-card"><div class="d-lbl">Postre</div><div class="d-name">🍰 ${r.dessert}</div></div>
+      </div>
+      <div class="detail-actions">
+        <button class="btn-primary" onclick="state.detailTab='directions'; render()">📍 Cómo llegar</button>
+        <button class="btn-outline" onclick="state.detailTab='carta'; render()">Ver menú</button>
+        <button class="btn-primary full" onclick="resetReservation(); state.detailTab='reserve'; render()">📅 Reservar</button>
+      </div>
+      <button class="share-btn" onclick="shareRestaurant(${r.id})">🔗 Compartir restaurante</button>
+    `;
+  } else if(state.detailTab==="reserve"){
+    body = renderReserve(r);
+  } else if(state.detailTab==="carta"){
+    const cats = [["entradas","Entradas"],["platosFuertes","Platos fuertes"],["postres","Postres"],["bebidas","Bebidas"]];
+    body = `
+      <div class="avg-price-banner"><span>Precio promedio por persona</span><b>${fmtCOP(Math.round(r.avgPerson*0.85))} – ${fmtCOP(Math.round(r.avgPerson*1.15))}</b></div>
+      ${cats.map(([k,l])=> r.menu[k] && r.menu[k].length ? `
+        <div class="menu-cat">${l}</div>
+        ${r.menu[k].map(item=>`
+          <div class="menu-item">
+            <img src="${item.img}" alt="${item.name}">
+            <div style="flex:1;">
+              <div class="mi-name">${item.name}</div>
+              ${item.desc? `<div class="mi-desc">${item.desc}</div>`:""}
+              ${item.ingredients.length? `<div class="mi-ing">Incluye: ${item.ingredients.join(", ")}</div>`:""}
+            </div>
+            <div class="mi-price">${fmtCOP(item.price)}</div>
+          </div>
+        `).join("")}
+      `:"").join("")}
+    `;
+  } else if(state.detailTab==="reviews"){
+    const cats = [["comida","Calidad de la comida"],["servicio","Servicio"],["ambiente","Ambiente"],["precio","Relación calidad-precio"],["variedad","Variedad del menú"]];
+    body = `
+      <div class="rating-summary">
+        <div><div class="rating-big">${avgRating(r)}</div><div style="color:var(--gold); font-size:13px;">${"★".repeat(Math.round(avgRating(r)))}${"☆".repeat(5-Math.round(avgRating(r)))}</div><div style="font-size:11px; color:var(--gray);">${r.reviews.length} reseñas</div></div>
+        <div class="cat-bars">${cats.map(([k,l])=>`<div class="cat-bar-row"><span class="lbl">${l}</span><div class="cat-bar-track"><div class="cat-bar-fill" style="width:${avgCat(r,k)/5*100}%"></div></div></div>`).join("")}</div>
+      </div>
+      <button class="add-review-btn" onclick="addReview(${r.id})">✏️ Escribir una reseña</button>
+      ${r.reviews.map(rv=>`
+        <div class="review-card">
+          <div class="rv-head"><span class="rv-user">${rv.user}</span><span class="rv-stars">${"★".repeat(rv.rating)}${"☆".repeat(5-rv.rating)}</span></div>
+          <div class="rv-text">${rv.text}</div>
+        </div>
+      `).join("")}
+    `;
+  } else if(state.detailTab==="directions"){
+    const gmapsUrl = "https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(r.address);
+    const walkMin = Math.round(r.distance*12);
+    const bikeMin = Math.round(r.distance*4.5);
+    const carMin = Math.round(r.distance*2.5)+3;
+    const transitMin = Math.round(r.distance*5)+5;
+    body = `
+      <div class="map-box">
+        <div class="pin" style="left:14px; top:14px;">🧍</div>
+        <div class="pin" style="right:14px; bottom:14px;">📍</div>
+        <div class="route-line"></div>
+        <div style="text-align:center; font-size:12px; color:var(--brown); margin-top:6px;">${state.location} → ${r.name} · ${r.distance} km</div>
+      </div>
+      <div class="time-grid">
+        <div class="time-item"><span class="t-ic">🚶</span><div class="t-val">${walkMin} min</div><div class="t-lbl">Caminando</div></div>
+        <div class="time-item"><span class="t-ic">🚗</span><div class="t-val">${carMin} min</div><div class="t-lbl">Automóvil</div></div>
+        <div class="time-item"><span class="t-ic">🚌</span><div class="t-val">${transitMin} min</div><div class="t-lbl">Transporte</div></div>
+      </div>
+      <div class="info-item" style="margin-bottom:16px;"><div class="lbl">Dirección</div><div class="val">${r.address}</div></div>
+      <a class="gmaps-btn" href="${gmapsUrl}" target="_blank" rel="noopener">🗺️ Abrir en Google Maps</a>
+    `;
+  } else if(state.detailTab==="social"){
+    body = `
+      <div class="section-label">A tus contactos les gustó este restaurante</div>
+      ${r.friends.map(f=>`<div class="friend-row"><div class="f-avatar">${f.name[0]}</div><div class="f-text"><b>${f.name}</b> ${f.action}.</div></div>`).join("")}
+      <button class="share-btn" style="margin-top:16px;" onclick="shareRestaurant(${r.id})">🔗 Compartir restaurante con un amigo</button>
+    `;
+  }
+
+return `
+    <div class="top-nav-back" onclick="go('results')">← Volver a resultados</div>
+    <div class="gallery"><img src="${r.img}" alt="${r.name}"><img src="${r.img}&sat=-30" alt="${r.name} plato"></div>
+    <div class="detail-head">
+      <div><div class="detail-title">${r.name}</div><div style="color:var(--gray); font-size:13px;">${r.cuisine.join(", ")}</div></div>
+      <div class="btn-sm fav ${state.favorites.has(r.id)?'saved':''}" style="flex:none; padding:10px 14px;" onclick="toggleFav(${r.id})">${state.favorites.has(r.id)?'❤️':'🤍'}</div>
+    </div>
+    <div class="detail-meta"><span>⭐ ${avgRating(r)} (${r.reviews.length})</span><span>💰 ${priceLabel(r.price)}</span><span>📍 ${r.distance} km</span><span>🕐 ${r.hours}</span></div>
+    ${tabsHtml}
+    ${body}
+  `;
+}
+function renderReserve(r){
+  const res = state.reservation;
+
+  if(res.confirmed){
+    return `
+      <div class="confirm-check">✓</div>
+      <h2 style="text-align:center; font-size:20px; margin-bottom:6px;">¡Reserva confirmada!</h2>
+      <div style="text-align:center; color:var(--gray); font-size:13px; margin-bottom:20px;">Te esperamos en ${r.name}</div>
+      <div class="reserve-summary">
+        <div class="rs-row"><span>Restaurante</span><span>${r.name}</span></div>
+        <div class="rs-row"><span>Fecha</span><span>${res.dateLabel}</span></div>
+        <div class="rs-row"><span>Hora</span><span>${res.time}</span></div>
+        <div class="rs-row"><span>Personas</span><span>${res.people}</span></div>
+        ${res.name? `<div class="rs-row"><span>A nombre de</span><span>${res.name}</span></div>`:""}
+      </div>
+      <div class="detail-actions">
+        <button class="btn-outline" onclick="resetReservation(); render()">Nueva reserva</button>
+        <button class="btn-primary" onclick="state.detailTab='match'; render()">Volver al restaurante</button>
+      </div>
+    `;
+  }
+
+const days = nextDays(6).map(d=>({ d, dayName: DAY_NAMES[d.getDay()], dayNum: d.getDate() }));
+
+  if(res.step==="date"){
+    return `
+      <div class="field-title" style="margin-bottom:4px;">Selecciona una fecha</div>
+      <div class="field-sub">Elige el día en el que quieres visitar ${r.name}.</div>
+      <div class="date-scroll">
+        ${days.map(({d,dayName,dayNum})=>`
+          <div class="date-chip ${res.dateKey===d.toDateString()?'selected':''}" onclick='selectReserveDate(${d.getTime()})'>
+            <div class="dc-day">${dayName}</div><div class="dc-num">${dayNum}</div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  if(res.step==="time"){
+    const slots = timeSlotsFor(r, new Date(res.dateKeyRaw));
+    return `
+      <div class="top-nav-back" onclick="state.reservation.step='date'; render()">← Cambiar fecha</div>
+      <div class="field-title" style="margin-bottom:4px;">${res.dateLabel}</div>
+      <div class="field-sub">Horas disponibles para tu reserva.</div>
+      <div class="time-slot-grid">
+        ${slots.map(s=>`<div class="time-slot ${s.available?'':'disabled'} ${res.time===s.time?'selected':''}" onclick="${s.available? `selectReserveTime('${s.time}')`:''}">${s.time}</div>`).join("")}
+      </div>
+    `;
+  }
+
+if(res.step==="details"){
+    return `
+      <div class="top-nav-back" onclick="state.reservation.step='time'; render()">← Cambiar hora</div>
+      <div class="reserve-summary">
+        <div class="rs-row"><span>Restaurante</span><span>${r.name}</span></div>
+        <div class="rs-row"><span>Fecha</span><span>${res.dateLabel}</span></div>
+        <div class="rs-row"><span>Hora</span><span>${res.time}</span></div>
+      </div>
+      <div class="field-title" style="margin-bottom:10px;">¿Cuántas personas?</div>
+      <div class="people-stepper">
+        <button onclick="state.reservation.people=Math.max(1,state.reservation.people-1); render()">–</button>
+        <div class="pc">${res.people} ${res.people===1?'persona':'personas'}</div>
+        <button onclick="state.reservation.people=Math.min(20,state.reservation.people+1); render()">+</button>
+      </div>
+      <div class="field-title" style="margin-bottom:10px;">A nombre de (opcional)</div>
+      <input class="name-input" placeholder="Tu nombre" value="${res.name}" oninput="state.reservation.name=this.value">
+      <button class="cta-main" onclick="confirmReservation()">Confirmar reserva ❤️</button>
+    `;
+  }
+}
+function selectReserveDate(ts){
+  const d = new Date(ts);
+  state.reservation.dateKey = d.toDateString();
+  state.reservation.dateKeyRaw = ts;
+  state.reservation.dateLabel = DAY_NAMES_FULL[d.getDay()]+" "+d.getDate()+" de "+MONTH_NAMES[d.getMonth()];
+  state.reservation.step = "time";
+  render();
+}
+function selectReserveTime(t){ state.reservation.time = t; state.reservation.step = "details"; render(); }
+
+function shareRestaurant(id){
+  const r = RESTAURANTS.find(x=>x.id===id);
+  const text = "Mira este restaurante en Foodie Match: "+r.name+" — "+r.dish+" 😋";
+  if(navigator.share){ navigator.share({title:r.name, text}); }
+  else{ alert("Enlace copiado para compartir:\\n\\n"+text); }
+}
+function addReview(id){
+  const r = RESTAURANTS.find(x=>x.id===id);
+  const stars = prompt("¿Cuántas estrellas le das a "+r.name+"? (1-5)","5");
+  if(!stars) return;
+  const text = prompt("Cuéntanos tu experiencia:","");
+  if(text===null) return;
+  r.reviews.push({user:"Tú", rating: Math.max(1,Math.min(5,parseInt(stars)||5)), text: text||"¡Muy buena experiencia!", cat:{comida:5,servicio:5,ambiente:5,precio:4,variedad:4}});
+  render();
+}
+/* ============ FAVORITES ============ */
+function renderFavorites(){
+  const favs = RESTAURANTS.filter(r=>state.favorites.has(r.id));
+  if(favs.length===0){
+    return `<h2 style="font-size:22px;">Favoritos</h2><div class="empty-state"><div class="e-ic">🤍</div>Aún no has guardado restaurantes.<br>Guarda los que más te gusten para verlos aquí.</div>`;
+  }
+  return `
+    <h2 style="font-size:22px; margin-bottom:16px;">Favoritos</h2>
+    ${favs.map(r=>`
+      <div class="rcard" onclick="state.selectedId=${r.id}; state.detailTab='match'; go('detail')">
+        <img src="${r.img}">
+        <div class="rcard-body">
+          <div class="rcard-top"><div class="rcard-name">${r.name}</div><div class="match-badge">⭐ ${avgRating(r)}</div></div>
+          <div class="rcard-meta"><span>💰 ${priceLabel(r.price)}</span><span>📍 ${r.distance} km</span></div>
+          <div class="card-actions" onclick="event.stopPropagation()">
+            <div class="btn-sm" onclick="state.selectedId=${r.id}; state.detailTab='match'; go('detail')">Ver restaurante</div>
+            <div class="btn-sm fav saved" onclick="toggleFav(${r.id})">Eliminar</div>
+          </div>
+        </div>
+      </div>
+    `).join("")}
+  `;
+}
+/* ============ PROFILE ============ */
+function renderProfile(){
+  const p = state.prefs;
+  return `
+    <h2 style="font-size:22px; margin-bottom:18px;">Perfil</h2>
+    <div class="profile-head"><div class="avatar">FM</div><div><div style="font-weight:700; font-size:16px;">Tu perfil gastronómico</div><div style="color:var(--gray); font-size:12.5px;">📍 ${state.location}</div></div></div>
+    <div class="section-label">Preferencias guardadas</div>
+    <div style="margin-bottom:22px;">
+      ${p.cuisines.length? p.cuisines.map(c=>`<span class="pref-summary-tag">${c}</span>`).join("") : `<span style="color:var(--gray); font-size:13px;">Aún no defines tus tipos de comida favoritos.</span>`}
+      ${p.liked.map(c=>`<span class="pref-summary-tag">😋 ${c}</span>`).join("")}
+      ${p.avoid.map(c=>`<span class="pref-summary-tag">🚫 ${c}</span>`).join("")}
+      ${p.budget? `<span class="pref-summary-tag">💰 ${p.budget}</span>`:""}
+    </div>
+    <div class="list-item" onclick="go('prefs')"><div class="li-lbl">✏️ Editar preferencias</div><span>›</span></div>
+    <div class="list-item" onclick="changeLocation()"><div class="li-lbl">📍 Cambiar ubicación</div><span>›</span></div>
+    <div class="list-item" onclick="go('favorites')"><div class="li-lbl">❤️ Restaurantes favoritos (${state.favorites.size})</div><span>›</span></div>
+    <div class="section-label" style="margin-top:22px;">Historial de búsquedas</div>
+    ${state.history.length? state.history.map(h=>`<div class="hist-item">🕐 ${h}</div>`).join("") : `<div style="color:var(--gray); font-size:13px;">Tus búsquedas recientes aparecerán aquí.</div>`}
+  `;
+}
+
+/* ============ NAV ============ */
+function renderNav(){
+  const items = [{v:"home", ic:"🏠", lb:"Inicio"},{v:"results", ic:"🔎", lb:"Explorar"},{v:"favorites", ic:"❤️", lb:"Favoritos"},{v:"profile", ic:"👤", lb:"Perfil"}];
+  return items.map(i=>`<div class="navitem ${state.view===i.v?'active':''}" onclick="go('${i.v}')"><div class="ic">${i.ic}</div><div class="lb">${i.lb}</div></div>`).join("");
+}
+
+/* ============ MAIN ============ */
+function render(){
+  const map = { home: renderHome, prefs: renderPrefs, group: renderGroup, results: renderResults, detail: renderDetail, favorites: renderFavorites, profile: renderProfile };
+  document.getElementById('main').innerHTML = (map[state.view]||renderHome)();
+  document.getElementById('bottomnav').innerHTML = renderNav();
+}
+render();
+</script>
+</body>
+</html>
