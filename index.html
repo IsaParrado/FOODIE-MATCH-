@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Foodie Match v3 — Encuentra tu match gastronómico</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root{
+  --terracotta: #C96F4A;
+  --terracotta-dark: #B15E3B;
+  --cream: #FAF7F2;
+  --white: #FFFFFF;
+  --brown: #6B5145;
+  --gold: #D6A85F;
+  --ink: #292624;
+  --gray: #817A74;
+  --line: #EEE6DC;
+  --shadow: 0 8px 24px rgba(41,38,36,0.08);
+  --shadow-sm: 0 2px 10px rgba(41,38,36,0.06);
+  --radius: 20px;
+}
+*{ box-sizing: border-box; }
+html,body{ margin:0; padding:0; }
+body{ background: var(--cream); color: var(--ink); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+.phone{ max-width: 430px; margin: 0 auto; min-height: 100vh; background: var(--cream); position: relative; display: flex; flex-direction: column; }
+h1,h2,h3,.display{ font-family: 'Fraunces', serif; color: var(--ink); margin: 0; }
+.main{ flex: 1; padding: 20px 20px 100px 20px; overflow-y: auto; }
+::-webkit-scrollbar{ display:none; }
+.v2-badge{ display:inline-block; background:var(--ink); color:white; font-size:9.5px; font-weight:800; letter-spacing:.06em; padding:3px 8px; border-radius:6px; vertical-align:middle; margin-left:6px;}
+
+/* topbar */
+.topbar{ display:flex; align-items:center; justify-content:space-between; padding: 6px 2px 18px 2px; }
+.brand{ display:flex; align-items:center; gap:8px; }
